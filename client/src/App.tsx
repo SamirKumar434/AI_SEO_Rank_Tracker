@@ -11,30 +11,50 @@ import RankTracker from "./pages/RankTracker";
 import RankDetail from "./pages/RankDetail";
 import { Toaster } from "react-hot-toast";
 import { useApp } from "./context/AppContext";
+import Loading from "./components/Loading";
 
 export default function App() {
-    const {user,loading}=useApp()
-    const location = useLocation();
+  const { user, loading } = useApp();
+  const location = useLocation();
 
-    const hideNavbar = ["/login", "/register"].includes(location.pathname);
+  const hideNavbar = ["/login", "/register"].includes(location.pathname);
+  if (loading) return <Loading />;
 
-    return (
-        <>
-            <Toaster />
-            {!hideNavbar && <Navbar />}
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={user ? <Navigate to="/dashboard" replace />: <Login state="login" />} />
-                <Route path="/register" element={user ? <Navigate to="/dashboard" replace />:<Login state="register" />} />
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/analyze" element={<Analyze />} />
-                    <Route path="/report/:id" element={<Report />} />
-                    <Route path="/history" element={<History />} />
-                    <Route path="/rank-tracker" element={<RankTracker />} />
-                    <Route path="/rank/:id" element={<RankDetail />} />
-                </Route>
-            </Routes>
-        </>
-    );
+  return (
+    <>
+      <Toaster />
+      {!hideNavbar && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/login"
+          element={
+            user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login state="login" />
+            )
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            user ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login state="register" />
+            )
+          }
+        />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/analyze" element={<Analyze />} />
+          <Route path="/report/:id" element={<Report />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/rank-tracker" element={<RankTracker />} />
+          <Route path="/rank/:id" element={<RankDetail />} />
+        </Route>
+      </Routes>
+    </>
+  );
 }
